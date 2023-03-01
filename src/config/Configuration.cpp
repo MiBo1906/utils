@@ -1,6 +1,7 @@
 #include "config/Configuration.hpp"
 #include <cstdlib>
 #include <fstream>
+#include <system_error>
 
 config::Configuration::Configuration():
     configurationValues() {
@@ -38,10 +39,14 @@ void config::Configuration::initConfiguration(std::filesystem::path configFile) 
                 }
             }
         }
+        else {
+            throw std::filesystem::filesystem_error("Failure in initConfiguration",configFile,std::error_code(2,std::system_category()));
+        }
     }
     catch(const std::filesystem::filesystem_error& e)
     {
         std::cerr << e.what() << '\n';
+        throw e;
     }
     
 }
