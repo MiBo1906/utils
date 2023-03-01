@@ -5,12 +5,8 @@ file(GLOB_RECURSE ALL_SOURCE_FILES *.cpp *.hpp)
 
 FUNCTION (EXCLUDE_FILES_FROM_DIR_IN_LIST _InFileList _excludeDirName _verbose)
   foreach (ITR ${_InFileList})
-    if ("${_verbose}")
-      message(STATUS "ITR=${ITR}")
-    endif ("${_verbose}")
 
     if ("${ITR}" MATCHES "(.*)${_excludeDirName}(.*)")                   # Check if the item matches the directory name in _excludeDirName
-      message(STATUS "Remove Item from List:${ITR}")
       list (REMOVE_ITEM _InFileList ${ITR})                              # Remove the item from the list
     endif ("${ITR}" MATCHES "(.*)${_excludeDirName}(.*)")
 

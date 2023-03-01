@@ -3,16 +3,15 @@
 
 #include <filesystem>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <typeinfo>
 #include <unordered_map>
-#include <sstream>
 namespace config {
 
 class Configuration {
 
 public:
-  
   void initConfiguration(std::filesystem::path configFile);
 
   template <typename T> T getValue(std::string key);

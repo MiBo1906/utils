@@ -17,7 +17,8 @@ void config::Configuration::initConfiguration(
         while (!stream.eof()) {
           std::getline(stream, input);
           std::size_t found = input.find(":");
-          input = input.back() == '\0' ? input.substr(0, input.size()-1) : input;
+          input =
+              input.back() == '\0' ? input.substr(0, input.size() - 1) : input;
 
           if (found != std::string::npos && (found < input.length() - 1)) {
             std::string key = input.substr(0, found);
