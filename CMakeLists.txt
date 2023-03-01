@@ -1,7 +1,7 @@
 # specify the required cmake version
 cmake_minimum_required(VERSION 3.21)
 # set the project name and version
-project(common VERSION 1.0)
+project(utils VERSION 1.0)
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -14,6 +14,7 @@ find_package(GTest REQUIRED)
 # Including extra cmake rules
 include(cmake/clang-dev-tools.cmake)
 
+include_directories("include")
 # include further diretories with cmake instructions
 add_subdirectory(app)
 add_subdirectory(src)
