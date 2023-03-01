@@ -2,72 +2,56 @@
 #define CONFIGURATION_HPP_INCLUDED
 
 #include <filesystem>
-#include <unordered_map>
+#include <iostream>
 #include <string>
 #include <typeinfo>
-#include <iostream>
-
+#include <unordered_map>
+#include <sstream>
 namespace config {
 
-    class Configuration {
-        
-        public:
+class Configuration {
 
-            Configuration();
-            virtual ~Configuration();
+public:
+  
+  void initConfiguration(std::filesystem::path configFile);
 
-            void initConfiguration(std::filesystem::path configFile);
+  template <typename T> T getValue(std::string key);
 
-            template<typename T>
-            T getValue(std::string key);
+private:
+  std::unordered_map<std::string, std::string> configurationValues;
+};
 
-        private:
+template <typename T> T Configuration::getValue(std::string key) {
+  try {
+    std::string value = configurationValues.at(key);
+    T result;
 
-            std::unordered_map<std::string,std::string> configurationValues;
-    };
+    std::istringstream ss(value);
+    ss >> result;
 
-    template<typename T>
-    T Configuration::getValue(std::string key)
-    {
-        try
-        {
-            std::string value = configurationValues.at(key);
-            T result;
+    if (!ss.fail())
+      return result;
+  } catch (std::out_of_range &e) {
+    std::cerr << e.what() << '\n';
+    throw e;
+  } catch (...) {
+  }
 
-            std::istringstream ss(value);
-            ss >> result;
-
-            if(!ss.fail())
-                return result;
-        }
-        catch(std::out_of_range& e) {
-            std::cerr << e.what() << '\n';
-            throw e;
-        }
-        catch(...) {
-
-        }
-
-        throw std::bad_cast();
-    }
-
-    template<>
-    std::string Configuration::getValue(std::string key)
-    {
-        try
-        {
-            std::string value = configurationValues.at(key);
-            
-            return value;
-        }
-        catch(std::out_of_range& e) {
-            std::cerr << e.what() << '\n';
-        }
-        
-        throw std::bad_cast();
-    }
-
+  throw std::bad_cast();
 }
 
+template <> std::string Configuration::getValue(std::string key) {
+  try {
+    std::string value = configurationValues.at(key);
+
+    return value;
+  } catch (std::out_of_range &e) {
+    std::cerr << e.what() << '\n';
+  }
+
+  throw std::bad_cast();
+}
+
+} // namespace config
 
 #endif

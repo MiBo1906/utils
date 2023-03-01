@@ -11,11 +11,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
-# Including extra cmake rules
-include(cmake/clang-dev-tools.cmake)
-
 include_directories("include")
 # include further diretories with cmake instructions
 add_subdirectory(app)
 add_subdirectory(src)
 add_subdirectory(unit-test)
+
+# Including extra cmake rules
+include(cmake/clang-dev-tools.cmake)
