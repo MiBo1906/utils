@@ -25,8 +25,8 @@ void config::Configuration::initConfiguration(std::filesystem::path configFile) 
                 while (!stream.eof()) {
                     std::getline(stream,input);
                     std::size_t found = input.find(":");
-                    if(found != std:: string::npos && found < input.length()) {
-                        std::string key = input.substr(0,found-1);
+                    if(found != std:: string::npos && (found < input.length() -1)) {
+                        std::string key = input.substr(0,found);
                         std::string value = input.substr(found+1);
 
                         if(std::getenv(key.c_str()) != nullptr) {
@@ -37,10 +37,9 @@ void config::Configuration::initConfiguration(std::filesystem::path configFile) 
                     }
                     input.clear();
                 }
+                return;
             }
-        }
-        else {
-            throw std::filesystem::filesystem_error("Failure in initConfiguration",configFile,std::error_code(2,std::system_category()));
+            
         }
     }
     catch(const std::filesystem::filesystem_error& e)
@@ -49,4 +48,5 @@ void config::Configuration::initConfiguration(std::filesystem::path configFile) 
         throw e;
     }
     
+    throw std::filesystem::filesystem_error("Failure in initConfiguration",configFile,std::error_code(2,std::system_category()));
 }

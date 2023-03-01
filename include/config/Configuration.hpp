@@ -42,6 +42,7 @@ namespace config {
         }
         catch(std::out_of_range& e) {
             std::cerr << e.what() << '\n';
+            throw e;
         }
         catch(...) {
 
