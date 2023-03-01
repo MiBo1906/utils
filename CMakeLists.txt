@@ -11,6 +11,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
+enable_testing()
+
 include_directories("include")
 # include further diretories with cmake instructions
 add_subdirectory(app)

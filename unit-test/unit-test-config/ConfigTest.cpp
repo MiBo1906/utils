@@ -1,21 +1,52 @@
 #include "config/Configuration.hpp"
 #include "gtest/gtest.h"
 #include <stdlib.h>
+#include <filesystem>
+#include <fstream>
+class ConfigTestFixture: public ::testing::Test { 
+public: 
+   ConfigTestFixture( ) { 
+       if(!std::filesystem::exists("/tmp/configuration.ini")) {
+          std::fstream file("/tmp/configuration.ini",std::ios_base::out);
+          if(file.is_open())
+          {
+            file.write("test:1\nstr:Hallo\ndata:\n",23);
+            file.flush();
+            file.close();
+          }
+       }
+   } 
 
-TEST(Configuration, testReadNonExistingFile) {
+   void SetUp( ) { 
+       // code here will execute just before the test ensues 
+   }
+
+   void TearDown( ) { 
+       // code here will be called just after the test completes
+       // ok to through exceptions from here if need be
+   }
+
+   ~ConfigTestFixture( )  { 
+       // cleanup any pending stuff, but no exceptions allowed
+   }
+
+   // put in any custom data members that you need 
+};
+
+TEST_F(ConfigTestFixture, testReadNonExistingFile) {
   config::Configuration conf;
 
   EXPECT_THROW(conf.initConfiguration("/tmp/config.ini"),
                std::filesystem::filesystem_error);
 }
 
-TEST(Configuration, testReadExistingFile) {
+TEST_F(ConfigTestFixture, testReadExistingFile) {
   config::Configuration conf;
 
   EXPECT_NO_THROW(conf.initConfiguration("/tmp/configuration.ini"));
 }
 
-TEST(Configuration, testReadIntFromConfig) {
+TEST_F(ConfigTestFixture, testReadIntFromConfig) {
   config::Configuration conf;
 
   EXPECT_NO_THROW(conf.initConfiguration("/tmp/configuration.ini"));
@@ -25,7 +56,7 @@ TEST(Configuration, testReadIntFromConfig) {
   EXPECT_EQ(value, 1);
 }
 
-TEST(Configuration, testReadStringFromConfig) {
+TEST_F(ConfigTestFixture, testReadStringFromConfig) {
   config::Configuration conf;
 
   EXPECT_NO_THROW(conf.initConfiguration("/tmp/configuration.ini"));
@@ -35,7 +66,7 @@ TEST(Configuration, testReadStringFromConfig) {
   EXPECT_EQ(value, "Hallo");
 }
 
-TEST(Configuration, testReadBadCast) {
+TEST_F(ConfigTestFixture, testReadBadCast) {
   config::Configuration conf;
 
   EXPECT_NO_THROW(conf.initConfiguration("/tmp/configuration.ini"));
@@ -43,7 +74,7 @@ TEST(Configuration, testReadBadCast) {
   EXPECT_THROW(conf.getValue<int>("str"), std::bad_cast);
 }
 
-TEST(Configuration, testReadNonExistingValue) {
+TEST_F(ConfigTestFixture, testReadNonExistingValue) {
   config::Configuration conf;
 
   EXPECT_NO_THROW(conf.initConfiguration("/tmp/configuration.ini"));
@@ -51,7 +82,7 @@ TEST(Configuration, testReadNonExistingValue) {
   EXPECT_THROW(conf.getValue<int>("data"), std::out_of_range);
 }
 
-TEST(Configuration, testEnvironmentOverridesValue) {
+TEST_F(ConfigTestFixture, testEnvironmentOverridesValue) {
   config::Configuration conf;
   setenv("test", "2", true);
 
