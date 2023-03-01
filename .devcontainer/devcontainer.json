@@ -20,7 +20,7 @@
 		"vscode": {
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
-				"fredericbonnet.cmake-test-adapter",
+				"matepek.vscode-catch2-test-adapter",
 				"eamodio.gitlens"
 			]
 		  }

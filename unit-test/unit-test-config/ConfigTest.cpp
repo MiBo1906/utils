@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "config/Configuration.hpp"
+#include <stdlib.h>
 
 TEST(Configuration, testReadNonExistingFile) 
 {
@@ -53,4 +54,25 @@ TEST(Configuration, testReadNonExistingValue)
     EXPECT_NO_THROW(conf.initConfiguration("/tmp/configuration.ini"));
 
     EXPECT_THROW(conf.getValue<int>("data"),std::out_of_range);
+}
+
+TEST(Configuration, testEnvironmentOverridesValue) 
+{
+    config::Configuration conf;
+    setenv("test","2",true);
+
+    EXPECT_NO_THROW(conf.initConfiguration("/tmp/configuration.ini"));
+
+    int value = conf.getValue<int>("test");
+
+    EXPECT_EQ(value,2);
+
+    unsetenv("test");
+
+    config::Configuration conf1;
+    EXPECT_NO_THROW(conf1.initConfiguration("/tmp/configuration.ini"));
+
+    value = conf1.getValue<int>("test");
+
+    EXPECT_EQ(value,1);
 }

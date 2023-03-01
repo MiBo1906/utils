@@ -1,5 +1,6 @@
-# specify the binary for the unit tests and deeper structure
+enable_testing()
 
+# specify the binary for the unit tests and deeper structure
 file(GLOB_RECURSE TEST_SOURCES LIST_DIRECTORIES false *.cpp)
 
 add_executable(unit-test-config ${TEST_SOURCES})
