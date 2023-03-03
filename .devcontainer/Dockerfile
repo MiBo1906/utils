@@ -16,9 +16,14 @@ RUN apt-get update && apt-get install -y \
     clang-tidy \
     libgtest-dev \
     libgmock-dev \
-    python3-pip
+    python3-pip 
+    
 
 RUN pip install -U pytest
+
+COPY log4cplus-files.tar.gz /tmp
+RUN cd /tmp && tar xvf log4cplus-files.tar.gz && cd log4cplus-install && cp -r include/* /usr/local/include && cp -r lib/* /usr/local/lib/ && rm -rf /tmp/log4cplus* && ldconfig
+
 
 # [Optional] Uncomment this section to install additional vcpkg ports.
 # RUN su vscode -c "${VCPKG_ROOT}/vcpkg install <your-port-name-here>"
